@@ -1,0 +1,9 @@
+!*.py
+.*
+*.db
+*.ipynb
+data/
+__pycache__/
+*.exe
+*.log
+--ip=127.0.0.1
