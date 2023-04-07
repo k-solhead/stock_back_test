@@ -53,19 +53,22 @@ def new_union_generator():
 def insert_divide_to_db(db_file_name):
     conn = sqlite3.connect(db_file_name)
     with conn:
-        try:
-            sql = 'INSERT INTO divide_union_data(code,date_of_right_allotment,before,after) VALUES(?,?,?,?)'
-            conn.executemany(sql, new_divide_generator())
-        except sqlite3.Error as e:
-            print('sqlite3.Error occurred:', e.args[0])
-        conn.commit
+        for new_divide in new_divide_generator():
+            try:
+                sql = 'INSERT INTO divide_union_data(code,date_of_right_allotment,before,after) VALUES(?,?,?,?)'
+                conn.execute(sql, new_divide)
+            except sqlite3.Error as e:
+                print('sqlite3.Error occurred:', e.args[0])
+    conn.commit
+
     with conn:
-        try:
-            sql = 'INSERT INTO divide_union_data(code,date_of_right_allotment,before,after) VALUES(?,?,?,?)'
-            conn.executemany(sql, new_union_generator())
-        except sqlite3.Error as e:
-            print('sqlite3.Error occurred:', e.args[0])
-        conn.commit
+        for new_union in new_union_generator():
+            try:
+                sql = 'INSERT INTO divide_union_data(code,date_of_right_allotment,before,after) VALUES(?,?,?,?)'
+                conn.execute(sql, new_union)
+            except sqlite3.Error as e:
+                print('sqlite3.Error occurred:', e.args[0])
+    conn.commit
     
         
 

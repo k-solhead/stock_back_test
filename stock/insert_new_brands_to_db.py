@@ -31,12 +31,13 @@ def new_brands_generator():
 def insert_new_brands_to_db(db_file_name):
     conn = sqlite3.connect(db_file_name)
     with conn:
-        try:
-            sql = 'INSERT INTO new_brands(code,date) VALUES(?,?)'
-            conn.executemany(sql, new_brands_generator())
-        except sqlite3.Error as e:
-            print('sqlite3.Error occurred:', e.args[0])
-            pass
+        for new_brands in new_brands_generator():
+            try:
+                sql = 'INSERT INTO new_brands(code,date) VALUES(?,?)'
+                conn.execute(sql, new_brands)
+            except sqlite3.Error as e:
+                print('sqlite3.Error occurred:', e.args[0])
+                pass
 
 if __name__ == "__main__":
   args = sys.argv

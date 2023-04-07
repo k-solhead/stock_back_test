@@ -26,17 +26,19 @@ def delete_brands_generator():
     for d, i in zip(q.find('tbody > tr > td:eq(0)'),
                     q.find('tbody > tr > td:eq(2)')):
         date = datetime.datetime.strptime(d.text, '%Y/%m/%d').date()
+        print(i.text, date)
         yield (i.text, date)
 
 def insert_delete_brands_to_db(db_file_name):
     conn = sqlite3.connect(db_file_name)
     with conn:
-        try:
-            sql = 'INSERT INTO delete_brands(code,date) VALUES(?,?)'
-            conn.executemany(sql, delete_brands_generator())
-        except sqlite3.Error as e:
-            print('sqlite3.Error occurred:', e.args[0])
-            pass
+        for delete_brands in delete_brands_generator():
+            try:
+                sql = 'INSERT INTO delete_brands(code,date) VALUES(?,?)'
+                conn.execute(sql, delete_brands)
+            except sqlite3.Error as e:
+                print('sqlite3.Error occurred:', e.args[0])
+                pass
 
 if __name__ == "__main__":
   args = sys.argv
